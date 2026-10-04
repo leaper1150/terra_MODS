@@ -2,8 +2,6 @@
 
 An all-in-one client mod for **Terra** (Hack Club) featuring an adjustable **Speed Multiplier** (up to 2.5x), a live **Speedometer**, and a real-time **Server-Synced RGB Clothes Loop** that broadcasts color cycling to every player in the lobby.
 
-
-
 ---
 
 ## ✨ Features
@@ -15,69 +13,54 @@ An all-in-one client mod for **Terra** (Hack Club) featuring an adjustable **Spe
 
 ---
 
-## ⚠️ Essential Requirement: Unlocking Player Speed
+## ⚠️ Setup Requirement: Unlocking Speed in DevTools
 
-Because Terra bundles its constants (`PLAYER_SPEED` and `PLAYER_SPRINT_SPEED`) inside a closed JavaScript module scope, the Tampermonkey script **cannot** modify speed variables until that object is exposed to the global `window` scope.
+Terra locks its speed settings inside private code. To let the script change your speed, you only have to do this **once** in your browser:
 
-You must expose `M` using your browser's Developer Tools debugger once. Choose your browser instructions below:
-
----
-
-### Method A: Mozilla Firefox (Recommended)
-
-1. Open [terra.hackclub.com](https://terra.hackclub.com/) and press **`F12`** (or `Ctrl + Shift + I` / `Cmd + Option + I`).
-2. Navigate to the **Debugger** tab.
-3. Press **`Ctrl + P`** (or `Cmd + P` on macOS) to open the file search bar, type `index-`, and hit **Enter** to open the main bundle script (e.g., `index-cTSz2Ld8.js`).
-4. Click the **`{}` (Pretty-print)** icon at the bottom-left of the script view to format minified code.
-5. Press **`Ctrl + F`** (or `Cmd + F`) and search for:
+### For Chrome, Brave, Edge & Opera
+1. Open the game in your browser and press **`F12`** to open Developer Tools.
+2. Click the **Sources** tab at the top.
+3. In the left file tree, look under `top` > `terra.hackclub.com` > `assets` and click the main script file (it starts with `index-` and ends in `.js`).
+4. Click the **`{ }`** icon at the very bottom-left of the code box to format the code so it's readable.
+5. Press **`Ctrl + F`** (or `Cmd + F` on Mac) and search for:
    ```text
-   PLAYER_SPEED:
+   PLAYER_SPEED
    ```
-6. Locate the object definition block (usually defined as `const M = { PLAYER_SPEED: 3.6, ... }` or a similar variable name).
-7. Right-click the line number immediately **after** that definition and select **Add logpoint** (or **Conditional Breakpoint**).
-8. Enter the following expression as the log message:
+6. You will see a block of code that looks like this:
    ```javascript
-   (window.M = M, false)
+   const M = {
+     PLAYER_SPEED: 3.6,
+     PLAYER_SPRINT_SPEED: 6,
+     // ...
+   };
    ```
-   *(The `, false` ensures the debugger exposes `M` to the global `window` object on load without pausing the game).*
-9. Refresh the page (**`F5`**). Check the **Console** tab by typing `window.M` — if it returns an object, speed modifications are fully unlocked.
-
----
-
-### Method B: Google Chrome, Brave & Chromium Browsers
-
-1. Open [terra.hackclub.com](https://terra.hackclub.com/) and press **`F12`** (or `Ctrl + Shift + I` / `Cmd + Option + I`).
-2. Go to the **Sources** tab.
-3. Press **`Ctrl + P`** (or `Cmd + P` on macOS), type `index-`, and open the primary game JavaScript file.
-4. Click the **`{}` (Pretty-print)** button in the lower toolbar if the file is minified.
-5. Press **`Ctrl + F`** (or `Cmd + F`) and search for:
-   ```text
-   PLAYER_SPEED:
-   ```
-6. Identify the variable name assigned to the constants object (e.g., `const M = { ... }`).
-7. Right-click the line number right below the object declaration and select **Add logpoint...**.
-8. Paste:
+7. Find the closing brace `};` at the end of that block. **Right-click the line number** right below it.
+8. Click **Add logpoint...**
+9. In the box that appears, paste this exact text:
    ```javascript
    window.M = M
    ```
-9. Press **Enter** to save the logpoint (marked with an orange badge).
-10. Refresh the page (**`F5`**). Verify by typing `window.M` into the **Console** tab.
+10. Press **Enter**. You will see an orange marker on that line number.
+11. Refresh the page (**`F5`**). The slider on the HUD will now control your speed.
 
 ---
 
-### Method C: Apple Safari
-
-1. Open **Safari > Settings > Advanced** and ensure **"Show features for web developers"** is enabled.
-2. Go to [terra.hackclub.com](https://terra.hackclub.com/) and open Web Inspector with **`Option + Cmd + I`**.
-3. Select the **Sources** tab.
-4. Locate the main game script under the domain's script assets.
-5. Search for `PLAYER_SPEED:` using **`Cmd + F`**.
-6. Right-click the line number immediately following the constant dictionary and select **Add Conditional Breakpoint**.
-7. Enter:
-   ```javascript
-   (window.M = M) && false
+### For Firefox
+1. Open the game and press **`F12`**.
+2. Click the **Debugger** tab at the top.
+3. Under the file list on the left, find and open the file named `index-....js`.
+4. Click the **`{ }`** icon at the bottom of the screen to un-minify the code.
+5. Press **`Ctrl + F`** (or `Cmd + F`) and search for:
+   ```text
+   PLAYER_SPEED
    ```
-8. Reload the page (**`Cmd + R`**).
+6. Look for the `const M = { ... };` block.
+7. **Right-click the line number** right below that block and select **Add logpoint**.
+8. Paste this exact line:
+   ```javascript
+   (window.M = M, false)
+   ```
+9. Press **Enter** and refresh the page (**`F5`**).
 
 ---
 
