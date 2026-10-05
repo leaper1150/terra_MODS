@@ -32,7 +32,7 @@ This guide provides step-by-step instructions for installing and setting up the 
 // @name         TERRA MOD
 // @namespace    terra.hackclub.mod
 // @version      1.0
-// @description  A clean mod suite for Terra: Speed, Noclip, Phasing, RGB Flow, Jitter, and Staff Badge.
+// @description  A clean mod suite for Terra: Speed, Noclip, Phasing, RGB Flow, Jitter
 // @match        https://terra.hackclub.com/*
 // @run-at       document-start
 // @grant        none
